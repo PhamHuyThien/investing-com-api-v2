@@ -1,0 +1,45 @@
+{
+  "name": "investing-com-api-v2",
+  "version": "4.3.3",
+  "description": "Unofficial APIs for Investing.com website.",
+  "main": "api/index.js",
+  "scripts": {
+    "lint": "eslint ./",
+    "test": "jest",
+    "coverage": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavideViolante/investing-com-api.git"
+  },
+  "keywords": [
+    "investing",
+    "api",
+    "investing.com",
+    "finance",
+    "markets",
+    "nasdaq",
+    "futures",
+    "currency",
+    "exchange",
+    "etf"
+  ],
+  "author": "Davide Violante",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DavideViolante/investing-com-api/issues"
+  },
+  "homepage": "https://github.com/DavideViolante/investing-com-api#readme",
+  "jest": {
+    "coveragePathIgnorePatterns": ["functions.js"]
+  },
+  "dependencies": {
+    "puppeteer": "^21.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.28.0",
+    "eslint-config-google": "^0.14.0",
+    "jest": "^29.3.1",
+    "jest-puppeteer": "^9.0.0"
+  }
+}
