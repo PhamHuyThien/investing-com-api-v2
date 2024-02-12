@@ -1,9 +1,10 @@
 {
   "name": "investing-com-api-v2",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Unofficial APIs for Investing.com website.",
   "main": "api/InvestingApiV2.js",
   "scripts": {
+    "test": "node test/test.js"
   },
   "repository": {
     "type": "git",

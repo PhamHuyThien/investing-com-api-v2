@@ -5,19 +5,23 @@ const InvestingInterface = require('./InvestingInterface');
 class InvestingApiV2 {
   __browser;
   __page;
+  __logger = console;
 
+  logger(logger) {
+    this.__logger = logger;
+  }
   async init(puppeteerLaunchOptions = {}, userAgent = BrowserInterface.USER_AGENT) {
-    console.info('[InvestingApiV2/init] starting InvestingApiV2 (using puppeteer)...');
+    this.__logger.info('[InvestingApiV2/init] starting InvestingApiV2 (using puppeteer)...');
     puppeteerLaunchOptions = { ...puppeteerLaunchOptions, headless: 'new' };
     this.__browser = await puppeteer.launch(puppeteerLaunchOptions);
     this.__page = await this.__browser.newPage();
     await this.__page.setUserAgent(userAgent);
-    console.info('[InvestingApiV2/init] started InvestingApiV2 (using puppeteer).');
+    this.__logger.info('[InvestingApiV2/init] started InvestingApiV2 (using puppeteer).');
   }
 
   async investing(input, period = 'P1M', interval = 'P1D', pointsCount = 120) {
     try {
-      console.info(`[InvestingApiV2/investing] getting input [input='${input}', period=${period}, interval=${interval}, pointsCount=${pointsCount}]...`);
+      this.__logger.info(`[InvestingApiV2/investing] getting input [input='${input}', period=${period}, interval=${interval}, pointsCount=${pointsCount}]...`);
       this.__checkParams(input, period, interval, pointsCount);
       const pairId = InvestingInterface.MAPPING[input]?.pairId || input;
       const { data } = await this.__callInvesting(pairId, period, interval, pointsCount);
@@ -25,22 +29,24 @@ class InvestingApiV2 {
       if (!results.length) {
         throw new Error('Wrong input or pairId');
       }
-      console.info(`[InvestingApiV2/investing] getting input success ${JSON.stringify(results)}.`);
+      let responseLog = JSON.stringify(results);
+      responseLog = responseLog.length > 50 ? responseLog.substring(0, 50) + '...' : responseLog;
+      this.__logger.info(`[InvestingApiV2/investing] getting input success ${responseLog}.`);
       return results;
     } catch (err) {
-      console.error(`[InvestingApiV2/investing] error message = ${err.message}.`);
+      this.__logger.error(`[InvestingApiV2/investing] error message = ${err.message}.`);
       if (err.response?.data?.['@errors']?.[0]) {
-        console.error(`[InvestingApiV2/investing] error detail = ${err.response.data['@errors'][0]}.`);
+        this.__logger.error(`[InvestingApiV2/investing] error detail = ${err.response.data['@errors'][0]}.`);
       }
     }
   }
 
   close() {
-    console.info(`[InvestingApiV2/investing] closing InvestingApiV2 (using puppeteer)...`);
+    this.__logger.info(`[InvestingApiV2/investing] closing InvestingApiV2 (using puppeteer)...`);
     this.__browser.close();
     this.__page = undefined;
     this.__browser = undefined;
-    console.info(`[InvestingApiV2/investing] closed InvestingApiV2 (using puppeteer).`);
+    this.__logger.info(`[InvestingApiV2/investing] closed InvestingApiV2 (using puppeteer).`);
   }
 
   async __callInvesting(pairId, period, interval, pointsCount) {
