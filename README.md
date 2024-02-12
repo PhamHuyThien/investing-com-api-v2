@@ -7,3 +7,13 @@ Unofficial APIs for Investing.com website.
 
 ### Install
 `npm i investing-com-api-v2`
+
+```javascript
+await InVestingApiV2.init();
+await InVestingApiV2.investing(
+  'currencies/eur-usd',
+  'P1D',
+  'PT1M',
+  60);
+InVestingApiV2.close();
+```

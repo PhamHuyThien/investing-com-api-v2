@@ -1,16 +1,13 @@
 {
   "name": "investing-com-api-v2",
-  "version": "4.3.3",
+  "version": "5.0.0",
   "description": "Unofficial APIs for Investing.com website.",
-  "main": "api/index.js",
+  "main": "api/InvestingApiV2.js",
   "scripts": {
-    "lint": "eslint ./",
-    "test": "jest",
-    "coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DavideViolante/investing-com-api.git"
+    "url": "git+https://github.com/PhamHuyThien/investing-com-api-v2.git"
   },
   "keywords": [
     "investing",
@@ -27,12 +24,9 @@
   "author": "Davide Violante",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/DavideViolante/investing-com-api/issues"
+    "url": "https://github.com/PhamHuyThien/investing-com-api-v2.git/issues"
   },
-  "homepage": "https://github.com/DavideViolante/investing-com-api#readme",
-  "jest": {
-    "coveragePathIgnorePatterns": ["functions.js"]
-  },
+  "homepage": "https://github.com/PhamHuyThien/investing-com-api-v2.git#readme",
   "dependencies": {
     "puppeteer": "^21.1.1"
   },
