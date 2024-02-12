@@ -4,18 +4,16 @@ const InvestingInterface = require('./InvestingInterface');
 
 class InvestingApiV2 {
   __browser;
-  __page;
   __logger = console;
 
   logger(logger) {
     this.__logger = logger;
   }
-  async init(puppeteerLaunchOptions = {}, userAgent = BrowserInterface.USER_AGENT) {
+
+  async init(puppeteerLaunchOptions = {}) {
     this.__logger.info('[InvestingApiV2/init] starting InvestingApiV2 (using puppeteer)...');
     puppeteerLaunchOptions = { ...puppeteerLaunchOptions, headless: 'new' };
     this.__browser = await puppeteer.launch(puppeteerLaunchOptions);
-    this.__page = await this.__browser.newPage();
-    await this.__page.setUserAgent(userAgent);
     this.__logger.info('[InvestingApiV2/init] started InvestingApiV2 (using puppeteer).');
   }
 
@@ -23,15 +21,16 @@ class InvestingApiV2 {
     try {
       this.__logger.info(`[InvestingApiV2/investing] getting input [input='${input}', period=${period}, interval=${interval}, pointsCount=${pointsCount}]...`);
       this.__checkParams(input, period, interval, pointsCount);
-      const pairId = InvestingInterface.MAPPING[input]?.pairId || input;
-      const { data } = await this.__callInvesting(pairId, period, interval, pointsCount);
-      const results = BrowserInterface.mapResponse(data);
-      if (!results.length) {
-        throw new Error('Wrong input or pairId');
-      }
+      let pairId = InvestingInterface.MAPPING[input]?.pairId || input;
+      let currentTime = Date.now();
+      let { data } = await this.__callInvesting(pairId, period, interval, pointsCount);
+      let executeTime = Date.now() - currentTime;
+      let results = BrowserInterface.mapResponse(data);
+      this.__checkResponse(results);
+      let totalPage = (await this.__browser.pages()).length;
       let responseLog = JSON.stringify(results);
       responseLog = responseLog.length > 50 ? responseLog.substring(0, 50) + '...' : responseLog;
-      this.__logger.info(`[InvestingApiV2/investing] getting input success ${responseLog}.`);
+      this.__logger.info(`[InvestingApiV2/investing] get success ${responseLog}. runtime ${executeTime} ms, ${totalPage} page running.`);
       return results;
     } catch (err) {
       this.__logger.error(`[InvestingApiV2/investing] error message = ${err.message}.`);
@@ -41,17 +40,20 @@ class InvestingApiV2 {
     }
   }
 
-  close() {
+  async close() {
     this.__logger.info(`[InvestingApiV2/investing] closing InvestingApiV2 (using puppeteer)...`);
-    this.__browser.close();
-    this.__page = undefined;
+    await this.__browser.close();
     this.__browser = undefined;
     this.__logger.info(`[InvestingApiV2/investing] closed InvestingApiV2 (using puppeteer).`);
   }
 
   async __callInvesting(pairId, period, interval, pointsCount) {
-    await this.__page.goto(`https://api.investing.com/api/financialdata/${pairId}/historical/chart?period=${period}&interval=${interval}&pointscount=${pointsCount}`);
-    return await BrowserInterface.getJsonContent(this.__page);
+    let page = await this.__browser.newPage();
+    await page.setUserAgent(BrowserInterface.USER_AGENT);
+    await page.goto(`https://api.investing.com/api/financialdata/${pairId}/historical/chart?period=${period}&interval=${interval}&pointscount=${pointsCount}`);
+    let response = await BrowserInterface.getJsonContent(page);
+    await page.close();
+    return response;
   }
 
   __checkParams(input, period, interval, pointsCount) {
@@ -66,6 +68,12 @@ class InvestingApiV2 {
     }
     if (!InvestingInterface.VALID_POINTS_COUNT.includes(pointsCount)) {
       throw Error('Invalid pointsCount parameter. Valid values are: 60, 70, 120');
+    }
+  }
+
+  __checkResponse(data) {
+    if (!data.length) {
+      throw new Error('Wrong input or pairId');
     }
   }
 }
