@@ -11,6 +11,8 @@ Upgraded from [investing-com-api](https://github.com/DavideViolante/investing-co
 
 ### Example
 ```javascript
+const InVestingApiV2 = require('investing-com-api-v2/api/InvestingApiV2');
+
 //default using console, can use winston...
 InVestingApiV2.logger(console);
 
