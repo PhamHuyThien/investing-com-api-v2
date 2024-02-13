@@ -1,16 +1,22 @@
 const InVestingApiV2 = require('../api/InvestingApiV2');
 
 (async () => {
+  //default using console, can use winston...
   InVestingApiV2.logger(console);
+  //enable debugger
+  InVestingApiV2.setDebugger(false);
+
+  //startup browser
   await InVestingApiV2.init();
-  // process.on('exit', InVestingApiV2.close);
-  setInterval(async () => {
-    await InVestingApiV2.investing(
+
+  //get data
+  let data = await InVestingApiV2.investing(
       'currencies/eur-usd',
       'P1D',
       'PT1M',
       60);
+  console.log(data);
 
-  }, 50);
-  // await InVestingApiV2.close();
+  //close browser
+  await InVestingApiV2.close();
 })();

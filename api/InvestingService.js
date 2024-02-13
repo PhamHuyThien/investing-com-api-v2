@@ -1,4 +1,4 @@
-class InvestingInterface {
+class InvestingService {
   static VALID_PERIOD = ['P1D', 'P1W', 'P1M', 'P3M', 'P6M', 'P1Y', 'P5Y', 'MAX'];
   static VALID_INTERVAL = ['PT1M', 'PT5M', 'PT15M', 'PT30M', 'PT1H', 'PT5H', 'P1D', 'P1W', 'P1M'];
   static VALID_POINTS_COUNT = [60, 70, 120];
@@ -949,6 +949,21 @@ class InvestingInterface {
       name: 'PIMCO Commodity Real Return Strategy Institutional',
     },
   };
+  /**
+   * Map the Investing array response
+   * @param {Array} array Array of data returned from Investing website
+   * @return {Array} An array of objects with date and value properties
+   */
+  static mapResponse(array = []) {
+    return array.map((item) => ({
+      date: item[0], // date
+      value: item[1], // open
+      price_open: item[1],
+      price_high: item[2],
+      price_low: item[3],
+      price_close: item[4],
+    }));
+  }
 }
 
-module.exports = InvestingInterface;
+module.exports = InvestingService;

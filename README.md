@@ -1,19 +1,61 @@
-# Investing.com Unofficial APIs
-[![](https://github.com/davideviolante/investing-com-api/workflows/Node.js%20CI/badge.svg)](https://github.com/DavideViolante/investing-com-api/actions?query=workflow%3A"Node.js+CI") [![Coverage Status](https://coveralls.io/repos/github/DavideViolante/investing-com-api/badge.svg?branch=master)](https://coveralls.io/github/DavideViolante/investing-com-api?branch=master) [![Maintainability](https://api.codeclimate.com/v1/badges/ce48adbd97ff85557918/maintainability)](https://codeclimate.com/github/DavideViolante/investing-com-api/maintainability) ![npm](https://img.shields.io/npm/dm/investing-com-api)  [![Donate](https://img.shields.io/badge/paypal-donate-179BD7.svg)](https://www.paypal.me/dviolante)
+# Investing.com Unofficial APIs V2
+[![NPM](https://nodei.co/npm/investing-com-api-v2.png)](https://nodei.co/npm/investing-com-api-v2/)
 
-[![NPM](https://nodei.co/npm/investing-com-api.png)](https://nodei.co/npm/investing-com-api/)
+### Introduction
+Unofficial APIs for Investing.com website.  
+Upgraded from [investing-com-api](https://github.com/DavideViolante/investing-com-api), fixes RAM overflow error when hanging for a long time on windows server.  
 
-Unofficial APIs for Investing.com website.
 
 ### Install
 `npm i investing-com-api-v2`
 
+### Example
 ```javascript
-await InVestingApiV2.init();
-await InVestingApiV2.investing(
+//default using console, can use winston...
+InVestingApiV2.logger(console);
+
+//enable debugger
+InVestingApiV2.setDebugger(false);
+
+//startup browser
+//function init(pptrLaunchOptions:LaunchOptions):Promise<void>;
+await InVestingApiV2.init({});
+
+//get data
+/*
+function investing(
+  input: string,
+  period?: 'P1D' | 'P1W' | 'P1M' | 'P3M' | 'P6M' | 'P1Y' | 'P5Y' | 'MAX',
+  interval?: 'PT1M' | 'PT5M' | 'PT15M' | 'PT30M' | 'PT1H' | 'PT5H' | 'P1D' | 'P1W' | 'P1M',
+  pointscount?: 60 | 70 | 120
+): Promise<{
+    date: number,
+    value: number,
+    price_open: number,
+    price_high: number,
+    price_low: number,
+    price_close: number,
+  }[]>
+*/
+let data = await InVestingApiV2.investing(
   'currencies/eur-usd',
   'P1D',
   'PT1M',
   60);
-InVestingApiV2.close();
+console.log(data);
+
+//close browser
+//function close():Promise<void>;
+await InVestingApiV2.close();
 ```
+
+### Inputs
+Only input is required, other params are optional.
+- **input** _String_: input string, see [mapping.js](https://github.com/DavideViolante/investing-com-api/blob/master/mapping.js) keys, or provide a valid investing.com pairId. (Required)
+- **period** _String_: Period of time, window size. Default P1M (1 month). Valid values: P1D, P1W, P1M, P3M, P6M, P1Y, P5Y, MAX.
+- **interval** _Number_: Interval between results. Default P1D (1 day). Valid values: PT1M, PT5M, PT15M, PT30M, PT1H, PT5H, P1D, P1W, P1M.
+- **pointsCount** _Number_: number of total results. Valid values seems to be 60, 70 or 120.
+- **puppeteerLaunchOptions** _Any_: Puppeteer launch options, see [official website](https://pptr.dev/api/puppeteer.launchoptions).
+
+### Author
+- [Pham Huy Thien](https://github.com/PhamHuyThien/)

@@ -1,6 +1,6 @@
 {
   "name": "investing-com-api-v2",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "Unofficial APIs for Investing.com website.",
   "main": "api/InvestingApiV2.js",
   "scripts": {
@@ -22,7 +22,7 @@
     "exchange",
     "etf"
   ],
-  "author": "Davide Violante",
+  "author": "Pham Huy Thien",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/PhamHuyThien/investing-com-api-v2.git/issues"
