@@ -948,6 +948,26 @@ class InvestingService {
       title: 'Pimco Commodity Real Return Strategy Fund Institutional Class',
       name: 'PIMCO Commodity Real Return Strategy Institutional',
     },
+    "commodities/nickel": {
+      pairId: "959208",
+      title: "Nickel",
+      name: "Nickel",
+    },
+    "commodities/tin": {
+      pairId: "1206787",
+      title: "Tin",
+      name: "Tin",
+    },
+    "equities/century-aluminum-co": {
+      pairId: "948436",
+      title: "Alumium",
+      name: "Alumium",
+    },
+    "etfs/etfs-zinc": {
+      pairId: "956470",
+      title: "Zinc",
+      name: "Zinc",
+    },
   };
   /**
    * Map the Investing array response

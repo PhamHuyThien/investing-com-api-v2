@@ -53,7 +53,7 @@ await InVestingApiV2.close();
 
 ### Inputs
 Only input is required, other params are optional.
-- **input** _String_: input string, see [mapping.js](https://github.com/DavideViolante/investing-com-api/blob/master/mapping.js) keys, or provide a valid investing.com pairId. (Required)
+- **input** _String_: input string, see [mapping.js](https://github.com/PhamHuyThien/investing-com-api-v2/blob/master/api/InvestingService.js) keys, or provide a valid investing.com pairId. (Required)
 - **period** _String_: Period of time, window size. Default P1M (1 month). Valid values: P1D, P1W, P1M, P3M, P6M, P1Y, P5Y, MAX.
 - **interval** _Number_: Interval between results. Default P1D (1 day). Valid values: PT1M, PT5M, PT15M, PT30M, PT1H, PT5H, P1D, P1W, P1M.
 - **pointsCount** _Number_: number of total results. Valid values seems to be 60, 70 or 120.

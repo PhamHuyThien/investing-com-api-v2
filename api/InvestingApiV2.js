@@ -6,6 +6,7 @@ class InvestingApiV2 {
   __browser;
   __logger = console;
   __debugger = true;
+  __intervalAutoClose;
 
   setDebugger(status) {
     this.__debugger = status;
@@ -34,10 +35,9 @@ class InvestingApiV2 {
       let executeTime = Date.now() - currentTime;
       let results = InvestingService.mapResponse(data);
       this.__checkResponse(results);
-      let totalPage = (await this.__browser.pages()).length;
       let responseLog = JSON.stringify(results);
       responseLog = responseLog.length > 50 ? responseLog.substring(0, 50) + '...' : responseLog;
-      this.__writeLog('info', `[InvestingApiV2/investing] get success ${responseLog}. runtime ${executeTime} ms, ${totalPage} page running.`);
+      this.__writeLog('info', `[InvestingApiV2/investing] get success ${responseLog}. runtime ${executeTime} ms.`);
       return results;
     } catch (err) {
       this.__writeLog('error', `[InvestingApiV2/investing] error message = ${err.message}.`);
@@ -52,6 +52,32 @@ class InvestingApiV2 {
     await this.__browser.close();
     this.__browser = undefined;
     this.__writeLog('info', `[InvestingApiV2/close] closed InvestingApiV2 (using puppeteer).`);
+  }
+
+  autoClose(maxPage = 20, intervalTime = 1000, timeRestart = 0, processExit = true) {
+    const __this = this;
+    this.__writeLog('info', `[InvestingApiV2/autoClose] enabled auto close max page ${maxPage}, interval ${intervalTime}, timeRestart ${timeRestart}`);
+    this.__intervalAutoClose = setInterval(async function() {
+      if (__this.__browser) {
+        let totalPage = (await __this.__browser.pages()).length;
+        __this.__writeLog('info', `[InvestingApiV2/autoClose] total page running ${totalPage}, max page ${maxPage}.`);
+        if (totalPage >= maxPage) {
+          __this.__writeLog('warn', `[InvestingApiV2/autoClose] max page > total page, shutdown in ${timeRestart} using processExit ${processExit}`);
+          setTimeout(function() {
+            if (processExit) {
+              process.exit(0);
+            } else {
+              __this.close();
+            }
+          }, timeRestart);
+        }
+      }
+    }, intervalTime);
+  }
+
+  async clearAutoClose() {
+    this.__writeLog('info', `[InvestingApiV2/clearAutoClose] disabled auto close successfully`);
+    if (this.__intervalAutoClose) clearInterval(this.__intervalAutoClose);
   }
 
   async __callInvesting(pairId, period, interval, pointsCount) {
