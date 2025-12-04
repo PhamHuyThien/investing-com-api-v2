@@ -1,4 +1,4 @@
-# Investing.com Unofficial APIs V2 ()
+# Investing.com Unofficial APIs V2 (no longer supported)
 [![NPM](https://nodei.co/npm/investing-com-api-v2.png)](https://nodei.co/npm/investing-com-api-v2/)
 
 ### Introduction
